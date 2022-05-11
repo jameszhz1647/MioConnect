@@ -1,4 +1,17 @@
+## Notes
+
+For this branch, try to connect 4 Myos through 2 dongles, initialize two Myodriver objects and pass through three args: serial port, upper Myo address and lower Myo address:
+
+myo connect process for each arm (1 serial port and 2 Myo address):
+
+ ![img](https://documents.lucid.app/documents/51ac79f2-4454-4d06-b891-bec94625818d/pages/0_0?a=768&x=-43&y=-52&w=1390&h=1773&store=1&accept=image%2F*&auth=LCA%20b3a9b52473ffa560c50c7f134b13005299e3ad0a-ts%3D1652295289)
+
+
+
+
+
 # Background
+
 MioConnect is a MyoConnect alternative for the Myo Armband, connects to the device(s) and transmits EMG/IMU via OSC.
 
 This software was developed for the Emovere Project (http://www.emovere.cl/). They needed to avoid MyoConnect, because
@@ -80,7 +93,7 @@ structure of the other commands and reading the `myohw` file (the `.py` or the o
 
 * `data_handler.py` / `DataHandler(config_obj)`: Handles EMG/IMU data and sends it through OSC. Here lies encapsulated
 the OSC message structure and no other file should change when adjusting it.
- 
+
 * `myo.py` / `Myo(address)`: Class for a myo, handles device info and prints it nicely. It's instantiated after the
 address is received, and it's used inside handlers in order to properly connect/reconnect. It also keeps the data
 obtained through MyoDriver's method `get_info()` (i.e. device name, battery level and firmware version), printing a Myo

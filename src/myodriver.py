@@ -41,13 +41,13 @@ class MyoDriver:
                 print(
                     "*** Connecting left myos " + str(len(self.myos) + 1) + " out of " + str(self.config.MYO_AMOUNT) + " ***")
                 print()
-                self.add_myo_connection()
+                self.add_left_myo_connection()
                 
             if self.port == "/dev/ttyACM1":
                 print(
                     "*** Connecting right myos " + str(len(self.myos) + 1) + " out of " + str(self.config.MYO_AMOUNT) + " ***")
                 print()                
-                self.add_myo_connection()
+                self.add_right_myo_connection()
                 
         self.receive()
 
@@ -59,7 +59,7 @@ class MyoDriver:
 #                                  CONNECT                                   #
 ##############################################################################
 
-    def add_myo_connection(self):
+    def add_left_myo_connection(self):
         """
         Procedure for connection with the Myo Armband. Scans, connects, disables sleep and starts EMG stream.
         """
@@ -69,7 +69,7 @@ class MyoDriver:
 
         # Await myo detection and create Myo object.
         self.scanning = True
-        while self.myo_to_connect is None:
+        while (self.myo_to_connect is None) and (self.port == "/dev/ttyACM0"):
             self.bluetooth.receive()
 
         # End gap
@@ -84,30 +84,30 @@ class MyoDriver:
         self.connect_and_retry(self.myo_to_connect, self.config.RETRY_CONNECTION_AFTER, self.config.MAX_RETRIES)
         self.myo_to_connect = None
     
-    # def add_right_myo_connection(self):
-    #     """
-    #     Procedure for connection with the Myo Armband. Scans, connects, disables sleep and starts EMG stream.
-    #     """
-    #     # Discover
-    #     self._print_status("Scanning")
-    #     self.bluetooth.gap_discover()
+    def add_right_myo_connection(self):
+        """
+        Procedure for connection with the Myo Armband. Scans, connects, disables sleep and starts EMG stream.
+        """
+        # Discover
+        self._print_status("Scanning")
+        self.bluetooth.gap_discover()
 
-    #     # Await myo detection and create Myo object.
-    #     self.scanning = True
-    #     while self.myo_to_connect is None:
-    #         self.bluetooth.receive()
+        # Await myo detection and create Myo object.
+        self.scanning = True
+        while (self.myo_to_connect is None) and (self.port == "/dev/ttyACM1"):
+            self.bluetooth.receive()
 
-    #     # End gap
-    #     self.bluetooth.end_gap()
+        # End gap
+        self.bluetooth.end_gap()
         
-    #     # Add handlers
-    #     self.bluetooth.add_connection_status_handler(self.create_connection_status_handle(self.myo_to_connect))
-    #     self.bluetooth.add_disconnected_handler(self.create_disconnect_handle(self.myo_to_connect))
+        # Add handlers
+        self.bluetooth.add_connection_status_handler(self.create_connection_status_handle(self.myo_to_connect))
+        self.bluetooth.add_disconnected_handler(self.create_disconnect_handle(self.myo_to_connect))
 
-    #     # Direct connection. Reconnect implements the retry procedure.
-    #     self.myos.append(self.myo_to_connect)
-    #     self.connect_and_retry(self.myo_to_connect, self.config.RETRY_CONNECTION_AFTER, self.config.MAX_RETRIES)
-    #     self.myo_to_connect = None    
+        # Direct connection. Reconnect implements the retry procedure.
+        self.myos.append(self.myo_to_connect)
+        self.connect_and_retry(self.myo_to_connect, self.config.RETRY_CONNECTION_AFTER, self.config.MAX_RETRIES)
+        self.myo_to_connect = None    
 
     def connect_and_retry(self, myo, timeout=None, max_retries=None):
         """
@@ -174,9 +174,9 @@ class MyoDriver:
         if self.scanning and not self.myo_to_connect:
             self._print_status("Device found", payload['sender'])
             if payload['data'].endswith(bytes(Final.myo_id)):
-                print(self.port)
-                print(self.upper)
-                print(self.lower)
+                # print(self.port)
+                # print(self.upper)
+                # print(self.lower)
                 if self.port == "/dev/ttyACM0" and (self.upper == payload['sender'] or self.lower == payload['sender']):
                     if not self._has_paired_with(payload['sender']):
                         print('find the left myos needed to connect')

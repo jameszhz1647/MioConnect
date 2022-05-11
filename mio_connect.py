@@ -71,8 +71,9 @@ def main(argv):
 
         if Config.GET_MYO_INFO:
             # Get info
-            myo_driver_left.get_info()
             myo_driver_right.get_info()
+            myo_driver_left.get_info()
+            
 
         print("Ready for data.")
         print()
