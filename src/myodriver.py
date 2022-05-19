@@ -25,7 +25,8 @@ class MyoDriver:
 
         self.myos = []
 
-        self.myo_to_connect = None
+        self.left_myo_to_connect = None
+        self.right_myo_to_connect = None
         self.scanning = False
 
         # Add handlers for expected events
@@ -69,20 +70,20 @@ class MyoDriver:
 
         # Await myo detection and create Myo object.
         self.scanning = True
-        while (self.myo_to_connect is None) and (self.port == "/dev/ttyACM0"):
+        while (self.left_myo_to_connect is None) and (self.port == "/dev/ttyACM0"):
             self.bluetooth.receive()
 
         # End gap
         self.bluetooth.end_gap()
         
         # Add handlers
-        self.bluetooth.add_connection_status_handler(self.create_connection_status_handle(self.myo_to_connect))
-        self.bluetooth.add_disconnected_handler(self.create_disconnect_handle(self.myo_to_connect))
+        self.bluetooth.add_connection_status_handler(self.create_connection_status_handle(self.left_myo_to_connect))
+        self.bluetooth.add_disconnected_handler(self.create_disconnect_handle(self.left_myo_to_connect))
 
         # Direct connection. Reconnect implements the retry procedure.
-        self.myos.append(self.myo_to_connect)
-        self.connect_and_retry(self.myo_to_connect, self.config.RETRY_CONNECTION_AFTER, self.config.MAX_RETRIES)
-        self.myo_to_connect = None
+        self.myos.append(self.left_myo_to_connect)
+        self.connect_and_retry(self.left_myo_to_connect, self.config.RETRY_CONNECTION_AFTER, self.config.MAX_RETRIES)
+        self.left_myo_to_connect = None
     
     def add_right_myo_connection(self):
         """
@@ -94,20 +95,20 @@ class MyoDriver:
 
         # Await myo detection and create Myo object.
         self.scanning = True
-        while (self.myo_to_connect is None) and (self.port == "/dev/ttyACM1"):
+        while (self.right_myo_to_connect is None) and (self.port == "/dev/ttyACM1"):
             self.bluetooth.receive()
 
         # End gap
         self.bluetooth.end_gap()
         
         # Add handlers
-        self.bluetooth.add_connection_status_handler(self.create_connection_status_handle(self.myo_to_connect))
-        self.bluetooth.add_disconnected_handler(self.create_disconnect_handle(self.myo_to_connect))
+        self.bluetooth.add_connection_status_handler(self.create_connection_status_handle(self.right_myo_to_connect))
+        self.bluetooth.add_disconnected_handler(self.create_disconnect_handle(self.right_myo_to_connect))
 
         # Direct connection. Reconnect implements the retry procedure.
-        self.myos.append(self.myo_to_connect)
-        self.connect_and_retry(self.myo_to_connect, self.config.RETRY_CONNECTION_AFTER, self.config.MAX_RETRIES)
-        self.myo_to_connect = None    
+        self.myos.append(self.right_myo_to_connect)
+        self.connect_and_retry(self.right_myo_to_connect, self.config.RETRY_CONNECTION_AFTER, self.config.MAX_RETRIES)
+        self.right_myo_to_connect = None    
 
     def connect_and_retry(self, myo, timeout=None, max_retries=None):
         """
@@ -171,27 +172,29 @@ class MyoDriver:
         """
         Handler for ble_evt_gap_scan_response event.
         """
-        if self.scanning and not self.myo_to_connect:
-            self._print_status("Device found", payload['sender'])
-            if payload['data'].endswith(bytes(Final.myo_id)):
-                # print(self.port)
-                # print(self.upper)
-                # print(self.lower)
-                if self.port == "/dev/ttyACM0" and (self.upper == payload['sender'] or self.lower == payload['sender']):
-                    if not self._has_paired_with(payload['sender']):
-                        print('find the left myos needed to connect')
-                        self.myo_to_connect = Myo(payload['sender'])
-                        self._print_status("Myo found", self.myo_to_connect.address)                                        
-                        self._print_status()
-                        self.scanning = False
-                    
-                elif self.port == "/dev/ttyACM1" and (self.upper == payload['sender'] or self.lower == payload['sender']):
-                    if not self._has_paired_with(payload['sender']):
-                        print('find the right myo needed to connect')
-                        self.myo_to_connect = Myo(payload['sender'])
-                        self._print_status("Myo found", self.myo_to_connect.address)                                        
-                        self._print_status()
-                        self.scanning = False   
+        if self.port == "/dev/ttyACM0":
+            if self.scanning and not self.left_myo_to_connect:
+                self._print_status("Device found for ACM0", payload['sender'])
+                if payload['data'].endswith(bytes(Final.myo_id)):
+                    if self.upper == payload['sender'] or self.lower == payload['sender']:
+                        if not self._has_paired_with(payload['sender']):
+                            print('find the left myos needed to connect')
+                            self.left_myo_to_connect = Myo(payload['sender'])
+                            self._print_status("Myo found", self.left_myo_to_connect.address)                                        
+                            self._print_status()
+                            self.scanning = False
+        
+        if self.port == "/dev/ttyACM1":      
+            if self.scanning and not self.right_myo_to_connect:
+                self._print_status("Device found for ACM1", payload['sender'])
+                if payload['data'].endswith(bytes(Final.myo_id)):                        
+                    if self.upper == payload['sender'] or self.lower == payload['sender']:
+                        if not self._has_paired_with(payload['sender']):
+                            print('find the right myo needed to connect')
+                            self.right_myo_to_connect = Myo(payload['sender'])
+                            self._print_status("Myo found", self.right_myo_to_connect.address)                                        
+                            self._print_status()
+                            self.scanning = False   
                         
 
     def _has_paired_with(self, address):
