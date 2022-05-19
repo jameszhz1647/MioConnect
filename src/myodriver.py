@@ -76,6 +76,7 @@ class MyoDriver:
         # End gap
         self.bluetooth.end_gap()
         
+        print(self.bluetooth.port)
         # Add handlers
         self.bluetooth.add_connection_status_handler(self.create_connection_status_handle(self.left_myo_to_connect))
         self.bluetooth.add_disconnected_handler(self.create_disconnect_handle(self.left_myo_to_connect))
@@ -101,6 +102,7 @@ class MyoDriver:
         # End gap
         self.bluetooth.end_gap()
         
+        print(self.bluetooth.port)
         # Add handlers
         self.bluetooth.add_connection_status_handler(self.create_connection_status_handle(self.right_myo_to_connect))
         self.bluetooth.add_disconnected_handler(self.create_disconnect_handle(self.right_myo_to_connect))
@@ -319,7 +321,11 @@ class MyoDriver:
             self._print_status("Getting myo info")
             self._print_status()
             print('Port used: ', self.port)
-            print(len(self.myos))
+            
+            for myo in self.myos:
+                print(myo.connection_id) 
+                print(myo.address)
+                
             for myo in self.myos:
                 print("test1")
                 self.bluetooth.read_device_name(myo.connection_id)

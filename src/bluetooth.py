@@ -16,7 +16,7 @@ class Bluetooth:
         self.message_delay = message_delay
         # self.serial = serial.Serial(port=self._detect_port(), baudrate=9600, dsrdtr=1)
         self.serial = serial.Serial(port=port, baudrate=9600, dsrdtr=1)
-
+        self.port = port
     @staticmethod
     def _detect_port():
         """
@@ -115,7 +115,7 @@ class Bluetooth:
         self.read_att(connection, ServiceHandles.DeviceName)
 
     def read_firmware_version(self, connection):
-        print("already read firm")
+        print("enter read firm")
         self.read_att(connection, ServiceHandles.FirmwareVersionCharacteristic)
         
 

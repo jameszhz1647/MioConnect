@@ -1,4 +1,18 @@
-## Notes
+## Debug Notes
+
+for left/right myo_driver object, each bluetooth port works, each myo address works
+
+Problem: myos disconnected when switching to another myo_driver object, 
+
+Issue: connection id?   (but different port should response got its own bluetooth?) 
+
+–> playload[‘connection’] is either 0 or 1, set_id for myo with paried address
+
+where is playload connection come from, who sets it?  
+
+`struct.unpack('<BB6sBHHHB', self.bgapi_rx_payload[:16])`
+
+## Procedure
 
 For this branch, try to connect 4 Myos through 2 dongles, initialize two Myodriver objects and pass through three args: serial port, upper Myo address and lower Myo address:
 

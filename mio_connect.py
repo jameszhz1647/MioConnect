@@ -53,7 +53,8 @@ def main(argv):
             config.VERBOSE = True
 
     # Run
-    myo_driver = None
+    myo_driver_left = None
+    myo_driver_right = None
     try:
         # Init
         myo_driver_left = MyoDriver(config, port0, left_upper, left_lower)
