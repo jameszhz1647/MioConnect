@@ -1,6 +1,7 @@
 from pythonosc import udp_client
 import struct
 import math
+import time
 
 
 class DataHandler:
@@ -11,24 +12,30 @@ class DataHandler:
         self.osc = udp_client.SimpleUDPClient(config.OSC_ADDRESS, config.OSC_PORT)
         self.printEmg = config.PRINT_EMG
         self.printImu = config.PRINT_IMU
+        self.emg_cnt = 0
 
     def handle_emg(self, payload):
         """
         Handle EMG data.
         :param payload: emg data as two samples in a single pack.
         """
+        val = struct.unpack('<8b',  payload['value'][:8])
+        # val2 = struct.unpack('<8b',  payload['value'][8:]) 
+        
         if self.printEmg:
-            print("EMG", payload['connection'], payload['atthandle'], payload['value'])
+            print("EMG", payload['connection'], payload['atthandle'], val)
+            # self.emg_cnt += 1
+            # print("EMG DATA Count:" ,self.emg_cnt)
 
-        # Send both samples
-        self._send_single_emg(payload['connection'], payload['value'][0:8])
-        self._send_single_emg(payload['connection'], payload['value'][8:16])
+        # # Send both samples
+        # self._send_single_emg(payload['connection'], payload['value'][0:8])
+        # self._send_single_emg(payload['connection'], payload['value'][8:16])
 
     def _send_single_emg(self, conn, data):
         builder = udp_client.OscMessageBuilder("/myo/emg")
         builder.add_arg(str(conn), 's')
         for i in struct.unpack('<8b ', data):
-            builder.add_arg(i / 127, 'i')  # Normalize
+            builder.add_arg(i, 'i')  # Normalize
         self.osc.send(builder.build())
 
     def handle_imu(self, payload):

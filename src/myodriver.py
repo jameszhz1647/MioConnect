@@ -204,6 +204,8 @@ class MyoDriver:
     def handle_attribute_value(self, e, payload):
         """
         Handler for EMG events, expected as a ble_evt_attclient_attribute_value event with handle 43, 46, 49 or 52.
+        Handler for IMU events, 28
+        Handler for DeviceName 3, FirmwareVersionCharacteristic 23, BatteryCharacteristic 17
         """
         emg_handles = [
             ServiceHandles.EmgData0Characteristic,
@@ -222,7 +224,11 @@ class MyoDriver:
 
         # Delegate EMG
         if payload['atthandle'] in emg_handles:
+            # start = time.time()
             self.data_handler.handle_emg(payload)
+            # end = time.time()
+            # freq = 1/(end - start)
+            # print("freq: ", freq)
 
         # Delegate IMU
         elif payload['atthandle'] in imu_handles:

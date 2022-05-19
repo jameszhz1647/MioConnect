@@ -47,6 +47,7 @@ __version__ = "2013-05-04"
 __email__ = "jeff@rowberg.net"
 
 import struct
+import time
 
 
 # thanks to Masaaki Shibata for Python event handler code
@@ -1014,10 +1015,20 @@ class BGLib(object):
                         connection, chrhandle, uuid_len = struct.unpack('<BHB', self.bgapi_rx_payload[:4])
                         uuid_data = self.bgapi_rx_payload[4:]
                         self.ble_evt_attclient_find_information_found({ 'connection': connection, 'chrhandle': chrhandle, 'uuid': uuid_data })
+################
+################################                  
                     elif packet_command == 5: # ble_evt_attclient_attribute_value
+                        start = time.time()
                         connection, atthandle, type, value_len = struct.unpack('<BHBB', self.bgapi_rx_payload[:5])
                         value_data = self.bgapi_rx_payload[5:]
                         self.ble_evt_attclient_attribute_value({ 'connection': connection, 'atthandle': atthandle, 'type': type, 'value': value_data })
+                        end = time.time()
+                        freq = 1/(end - start)
+                        print("freq: ", freq)
+                        print(atthandle)
+                        print(connection)
+                        print()
+
                     elif packet_command == 6: # ble_evt_attclient_read_multiple_response
                         connection, handles_len = struct.unpack('<BB', self.bgapi_rx_payload[:2])
                         handles_data = self.bgapi_rx_payload[2:]
