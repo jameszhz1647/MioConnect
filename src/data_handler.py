@@ -17,12 +17,15 @@ class DataHandler:
         Handle EMG data.
         :param payload: emg data as two samples in a single pack.
         """
+        val = struct.unpack('<8b',  payload['value'][:8])
+        # val2 = struct.unpack('<8b',  payload['value'][8:]) 
+        
         if self.printEmg:
-            print("EMG", payload['connection'], payload['atthandle'], payload['value'])
+            print("EMG", payload['connection'], payload['atthandle'], val)
 
-        # Send both samples
-        self._send_single_emg(payload['connection'], payload['value'][0:8])
-        self._send_single_emg(payload['connection'], payload['value'][8:16])
+        # # Send both samples
+        # self._send_single_emg(payload['connection'], payload['value'][0:8])
+        # self._send_single_emg(payload['connection'], payload['value'][8:16])
 
     def _send_single_emg(self, conn, data):
         builder = udp_client.OscMessageBuilder("/myo/emg")

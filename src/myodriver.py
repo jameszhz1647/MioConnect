@@ -10,14 +10,17 @@ class MyoDriver:
     """
     Responsible for myo connections and messages.
     """
-    def __init__(self, config):
+    def __init__(self, config, port, armband):
         self.config = config
-        print("OSC Address: " + str(self.config.OSC_ADDRESS))
-        print("OSC Port: " + str(self.config.OSC_PORT))
-        print()
+        # print("OSC Address: " + str(self.config.OSC_ADDRESS))
+        # print("OSC Port: " + str(self.config.OSC_PORT))
+        # print()
+        
+        self.port = port
+        self.armband = armband
 
         self.data_handler = DataHandler(self.config)
-        self.bluetooth = Bluetooth(self.config.MESSAGE_DELAY)
+        self.bluetooth = Bluetooth(self.config.MESSAGE_DELAY, self.port)
 
         self.myos = []
 
@@ -31,7 +34,8 @@ class MyoDriver:
         """
         Main. Disconnects possible connections and starts as many connections as needed.
         """
-        self.disconnect_all()
+        # self.disconnect_all()
+        print(self.port)
         while len(self.myos) < self.config.MYO_AMOUNT:
             print(
                 "*** Connecting myo " + str(len(self.myos) + 1) + " out of " + str(self.config.MYO_AMOUNT) + " ***")
@@ -134,14 +138,29 @@ class MyoDriver:
         """
         Handler for ble_evt_gap_scan_response event.
         """
-        if self.scanning and not self.myo_to_connect:
-            self._print_status("Device found", payload['sender'])
-            if payload['data'].endswith(bytes(Final.myo_id)):
-                if not self._has_paired_with(payload['sender']):
-                    self.myo_to_connect = Myo(payload['sender'])
-                    self._print_status("Myo found", self.myo_to_connect.address)
-                    self._print_status()
-                    self.scanning = False
+        if self.port == "/dev/ttyACM0":
+            if self.scanning and not self.myo_to_connect:
+                self._print_status("Device found for ACM0", payload['sender'])
+                if payload['data'].endswith(bytes(Final.myo_id)):
+                    if self.armband == payload['sender']: #set specific armband for specific port
+                        if not self._has_paired_with(payload['sender']):
+                            print("connect myo armband 0")
+                            self.myo_to_connect = Myo(payload['sender'])
+                            self._print_status("Myo found", self.myo_to_connect.address)
+                            self._print_status()
+                            self.scanning = False
+
+        if self.port == "/dev/ttyACM1":
+            if self.scanning and not self.myo_to_connect:
+                self._print_status("Device found for ACM1", payload['sender'])
+                if payload['data'].endswith(bytes(Final.myo_id)):
+                    if self.armband == payload['sender']:
+                        if not self._has_paired_with(payload['sender']):
+                            print("connect myo armband 1")
+                            self.myo_to_connect = Myo(payload['sender'])
+                            self._print_status("Myo found", self.myo_to_connect.address)
+                            self._print_status()
+                            self.scanning = False
 
     def _has_paired_with(self, address):
         """
@@ -257,12 +276,16 @@ class MyoDriver:
         Send read attribute messages and await answer.
         """
         if len(self.myos):
-            self._print_status("Getting myo info")
-            self._print_status()
+            print("Getting myo info")
+            print()
             for myo in self.myos:
+                print("test0")
                 self.bluetooth.read_device_name(myo.connection_id)
+                print("test1")
                 self.bluetooth.read_firmware_version(myo.connection_id)
+                print("test2")
                 self.bluetooth.read_battery_level(myo.connection_id)
+                print("test3")
             while not self._myos_ready():
                 self.receive()
             print("Myo list:")

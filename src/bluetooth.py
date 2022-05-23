@@ -11,10 +11,11 @@ class Bluetooth:
     Responsible for serial comm and message encapsulation.
     New commands can be added using myohw.py and following provided commands.
     """
-    def __init__(self, message_delay):
+    def __init__(self, message_delay, port):
         self.lib = BGLib()
         self.message_delay = message_delay
-        self.serial = serial.Serial(port=self._detect_port(), baudrate=9600, dsrdtr=1)
+        self.serial = serial.Serial(port=port, baudrate=9600, dsrdtr=1)
+        self.port = port
 
     @staticmethod
     def _detect_port():
