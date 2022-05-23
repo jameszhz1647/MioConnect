@@ -34,7 +34,7 @@ class MyoDriver:
         """
         Main. Disconnects possible connections and starts as many connections as needed.
         """
-        # self.disconnect_all()
+        self.disconnect_all()
         print(self.port)
         while len(self.myos) < self.config.MYO_AMOUNT:
             print(
