@@ -48,7 +48,7 @@ def main(argv):
 
         # Connect
         myo_driver_0.run()
-        # print('run second!!!')
+        print('run second!!!')
         # myo_driver_1.run()
         
         if turnoff:

@@ -93,6 +93,7 @@ class MyoDriver:
                 sys.exit(1)
             print()
             print("Reconnection failed for connection " + str(myo.connection_id) + ". Retry " + str(retries) + "...")
+            # myo.set_connected(False)
         myo.set_connected(True)
         return True
 
