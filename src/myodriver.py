@@ -141,6 +141,8 @@ class MyoDriver:
         """
         t0 = time.time()
         # Direct connection
+        print('direct_connect')
+        print(self.bluetooth.port)
         self._print_status("Connecting to", myo_to_connect.address)
         self.bluetooth.direct_connect(myo_to_connect.address)
 
