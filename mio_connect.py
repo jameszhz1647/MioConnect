@@ -44,24 +44,24 @@ def main(argv):
     try:
         # Init
         myo_driver_0 = MyoDriver(config, port0, left_lower)
-        myo_driver_1 = MyoDriver(config, port1, right_upper)
+        # myo_driver_1 = MyoDriver(config, port1, right_upper)
 
         # Connect
         myo_driver_0.run()
-        print('run second!!!')
-        myo_driver_1.run()
+        # print('run second!!!')
+        # myo_driver_1.run()
         
         if turnoff:
             # Turn off
             print("turn off")
             myo_driver_0.deep_sleep_all()
-            myo_driver_1.deep_sleep_all()
+            # myo_driver_1.deep_sleep_all()
             return
 
         if Config.GET_MYO_INFO:
             # Get info
             myo_driver_0.get_info()
-            myo_driver_1.get_info()
+            # myo_driver_1.get_info()
 
         print("Ready for data.")
         print()
@@ -69,7 +69,7 @@ def main(argv):
         # Receive and handle data
         while True:
             myo_driver_0.receive()
-            myo_driver_1.receive()
+            # myo_driver_1.receive()
 
     except KeyboardInterrupt:
         print("Interrupted.")
@@ -86,12 +86,12 @@ def main(argv):
                 myo_driver_0.disconnect_all()
         print("myo_driver_left Disconnected")
         
-        if myo_driver_1 is not None:
-            if Config.DEEP_SLEEP_AT_KEYBOARD_INTERRUPT:
-                myo_driver_1.deep_sleep_all()
-            else:
-                myo_driver_1.disconnect_all()
-        print("myo_driver_right Disconnected")
+        # if myo_driver_1 is not None:
+        #     if Config.DEEP_SLEEP_AT_KEYBOARD_INTERRUPT:
+        #         myo_driver_1.deep_sleep_all()
+        #     else:
+        #         myo_driver_1.disconnect_all()
+        # print("myo_driver_right Disconnected")
 
 
 def print_usage():
