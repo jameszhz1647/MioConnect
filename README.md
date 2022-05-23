@@ -1,4 +1,13 @@
+### Debug Notes for two Myodrivers with one myo for each port
+
+All variables of myodriver object are correctly stored after switching but the myo just disconnect.
+
+This connection even happens when running just one myodriver and taking breakpoint after myo_driver.run(). The terminal shows “connection [id] lost; reason: connection Timeout; Reconnection failed ERROR: Device in Wrong State.” But I continues after breakpoint: it will shows “Reconnecting…” after “Connection [id] lost; Reason: Connection Timeout” and connected the previous stored myodriver. 
+
+Bluetooth always disconnected if any pause or do something else other than dealing with the created myodriver. However, the create_disconnect_handle() can take care of the previous lost myo device and use connect_and_retry() to reconnect the myo. Therefore, in the original mio_connect.py, just move the .get_info() function right after each myodriver.run(), although the first created myodriver will lost for second but will be reconnected later.
+
 # Background
+
 MioConnect is a MyoConnect alternative for the Myo Armband, connects to the device(s) and transmits EMG/IMU via OSC.
 
 This software was developed for the Emovere Project (http://www.emovere.cl/). They needed to avoid MyoConnect, because
@@ -80,7 +89,7 @@ structure of the other commands and reading the `myohw` file (the `.py` or the o
 
 * `data_handler.py` / `DataHandler(config_obj)`: Handles EMG/IMU data and sends it through OSC. Here lies encapsulated
 the OSC message structure and no other file should change when adjusting it.
- 
+
 * `myo.py` / `Myo(address)`: Class for a myo, handles device info and prints it nicely. It's instantiated after the
 address is received, and it's used inside handlers in order to properly connect/reconnect. It also keeps the data
 obtained through MyoDriver's method `get_info()` (i.e. device name, battery level and firmware version), printing a Myo

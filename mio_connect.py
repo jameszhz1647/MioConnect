@@ -48,8 +48,10 @@ def main(argv):
 
         # Connect
         myo_driver_0.run()
+        myo_driver_0.get_info()
         print('run second!!!')
         myo_driver_1.run()
+        myo_driver_1.get_info()
         
         if turnoff:
             # Turn off
@@ -58,10 +60,10 @@ def main(argv):
             myo_driver_1.deep_sleep_all()
             return
 
-        if Config.GET_MYO_INFO:
-            # Get info
-            myo_driver_0.get_info()
-            myo_driver_1.get_info()
+        # if Config.GET_MYO_INFO:
+        #     # Get info
+        #     myo_driver_0.get_info()
+        #     myo_driver_1.get_info()
 
         print("Ready for data.")
         print()

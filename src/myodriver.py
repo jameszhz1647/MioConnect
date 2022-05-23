@@ -19,7 +19,7 @@ class MyoDriver:
         self.port = port
         self.armband = armband
 
-        self.data_handler = DataHandler(self.config)
+        self.data_handler = DataHandler(self.config, self.armband)
         self.bluetooth = Bluetooth(self.config.MESSAGE_DELAY, self.port)
 
         self.myos = []
