@@ -7,11 +7,11 @@ class DataHandler:
     """
     EMG/IMU/Classifier data handler.
     """
-    def __init__(self, config, armband):
+    def __init__(self, config, port):
         self.osc = udp_client.SimpleUDPClient(config.OSC_ADDRESS, config.OSC_PORT)
         self.printEmg = config.PRINT_EMG
         self.printImu = config.PRINT_IMU
-        self.device = armband
+        self.port = port
 
     def handle_emg(self, payload):
         """
@@ -22,7 +22,7 @@ class DataHandler:
         # val2 = struct.unpack('<8b',  payload['value'][8:]) 
         
         if self.printEmg:
-            print("EMG", str(self.device), payload['connection'], payload['atthandle'], val)
+            print("EMG", str(self.port), payload['connection'], payload['atthandle'], val)
 
         # # Send both samples
         # self._send_single_emg(payload['connection'], payload['value'][0:8])

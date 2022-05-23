@@ -43,8 +43,8 @@ def main(argv):
     myo_driver = None
     try:
         # Init
-        myo_driver_0 = MyoDriver(config, port0, left_lower)
-        myo_driver_1 = MyoDriver(config, port1, right_upper)
+        myo_driver_0 = MyoDriver(config, port0, left_upper, left_lower)
+        myo_driver_1 = MyoDriver(config, port1, right_upper, right_lower)
 
         # Connect
         myo_driver_0.run()

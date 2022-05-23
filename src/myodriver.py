@@ -10,16 +10,17 @@ class MyoDriver:
     """
     Responsible for myo connections and messages.
     """
-    def __init__(self, config, port, armband):
+    def __init__(self, config, port, upper, lower):
         self.config = config
         # print("OSC Address: " + str(self.config.OSC_ADDRESS))
         # print("OSC Port: " + str(self.config.OSC_PORT))
         # print()
         
         self.port = port
-        self.armband = armband
+        self.upper = upper
+        self.lower = lower
 
-        self.data_handler = DataHandler(self.config, self.armband)
+        self.data_handler = DataHandler(self.config, self.port)
         self.bluetooth = Bluetooth(self.config.MESSAGE_DELAY, self.port)
 
         self.myos = []
@@ -34,7 +35,7 @@ class MyoDriver:
         """
         Main. Disconnects possible connections and starts as many connections as needed.
         """
-        # self.disconnect_all()
+        self.disconnect_all()
         print(self.port)
         while len(self.myos) < self.config.MYO_AMOUNT:
             print(
@@ -142,9 +143,9 @@ class MyoDriver:
             if self.scanning and not self.myo_to_connect:
                 self._print_status("Device found for ACM0", payload['sender'])
                 if payload['data'].endswith(bytes(Final.myo_id)):
-                    if self.armband == payload['sender']: #set specific armband for specific port
+                    if self.upper == payload['sender'] or self.lower == payload['sender']: #set specific armbands for specific port
                         if not self._has_paired_with(payload['sender']):
-                            print("connect myo armband 0")
+                            print("connect left myos")
                             self.myo_to_connect = Myo(payload['sender'])
                             self._print_status("Myo found", self.myo_to_connect.address)
                             self._print_status()
@@ -154,9 +155,9 @@ class MyoDriver:
             if self.scanning and not self.myo_to_connect:
                 self._print_status("Device found for ACM1", payload['sender'])
                 if payload['data'].endswith(bytes(Final.myo_id)):
-                    if self.armband == payload['sender']:
+                    if self.upper == payload['sender'] or self.lower == payload['sender']:
                         if not self._has_paired_with(payload['sender']):
-                            print("connect myo armband 1")
+                            print("connect right myos")
                             self.myo_to_connect = Myo(payload['sender'])
                             self._print_status("Myo found", self.myo_to_connect.address)
                             self._print_status()
@@ -179,7 +180,8 @@ class MyoDriver:
         """
         if not payload['result'] == 0:
             if payload['result'] == 385:
-                print("ERROR: Device in Wrong State")
+                print(self.bluetooth.port)
+                print(payload['connection_handle'],"ERROR: Device in Wrong State")
             else:
                 print(payload)
         else:
