@@ -1018,13 +1018,13 @@ class BGLib(object):
 ################
 ################################                  
                     elif packet_command == 5: # ble_evt_attclient_attribute_value
-                        start = time.time()
+                        # start = time.time()
                         connection, atthandle, type, value_len = struct.unpack('<BHBB', self.bgapi_rx_payload[:5])
                         value_data = self.bgapi_rx_payload[5:]
                         self.ble_evt_attclient_attribute_value({ 'connection': connection, 'atthandle': atthandle, 'type': type, 'value': value_data })
-                        end = time.time()
-                        freq = 1/(end - start)
-                        print("freq: ", freq)
+                        # end = time.time()
+                        # freq = 1/(end - start)
+                        # print("freq: ", freq)
                         print(atthandle)
                         print(connection)
                         print()

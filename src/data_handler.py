@@ -12,7 +12,8 @@ class DataHandler:
         self.osc = udp_client.SimpleUDPClient(config.OSC_ADDRESS, config.OSC_PORT)
         self.printEmg = config.PRINT_EMG
         self.printImu = config.PRINT_IMU
-        self.emg_cnt = 0
+        self.cur_time = 0
+        self.freq_list = []
 
     def handle_emg(self, payload):
         """
@@ -23,7 +24,13 @@ class DataHandler:
         # val2 = struct.unpack('<8b',  payload['value'][8:]) 
         
         if self.printEmg:
+            pre_time = self.cur_time
+            self.cur_time = time.time()
+            duration = self.cur_time - pre_time
+            freq = 1/duration
+            self.freq_list.append(freq)
             print("EMG", payload['connection'], payload['atthandle'], val)
+            print('avg freq:', sum(self.freq_list)/len(self.freq_list))
             # self.emg_cnt += 1
             # print("EMG DATA Count:" ,self.emg_cnt)
 
