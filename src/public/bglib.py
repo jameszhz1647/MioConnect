@@ -1025,9 +1025,10 @@ class BGLib(object):
                         # end = time.time()
                         # freq = 1/(end - start)
                         # print("freq: ", freq)
-                        print(atthandle)
-                        print(connection)
-                        print()
+                        
+                        # print(atthandle)
+                        # print(connection)
+                        # print()
 
                     elif packet_command == 6: # ble_evt_attclient_read_multiple_response
                         connection, handles_len = struct.unpack('<BB', self.bgapi_rx_payload[:2])

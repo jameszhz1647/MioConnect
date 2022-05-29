@@ -113,14 +113,14 @@ class MyoDriver:
         # Notify successful connection with self.print_status and vibration
         self._print_status("Connection successful. Setting up...")
         self._print_status()
+        print(myo_to_connect.connection_id)
         self.bluetooth.send_vibration_medium(myo_to_connect.connection_id)
 
         # Disable sleep
         self.bluetooth.disable_sleep(myo_to_connect.connection_id)
-
         # Enable data and subscribe
         self.bluetooth.enable_data(myo_to_connect.connection_id, self.config)
-
+        
         print("Myo ready", myo_to_connect.connection_id, myo_to_connect.address)
         print()
         return True

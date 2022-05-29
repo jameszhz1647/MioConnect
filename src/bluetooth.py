@@ -136,6 +136,7 @@ class Bluetooth:
                         config.IMU_MODE,
                         config.CLASSIFIER_MODE])
 
+        
         # Subscribe for IMU
         self.write_att(connection,
                        ServiceHandles.IMUDataDescriptor,
@@ -145,15 +146,19 @@ class Bluetooth:
         self.write_att(connection,
                        ServiceHandles.EmgData0Descriptor,
                        Final.subscribe_payload)
+
         self.write_att(connection,
                        ServiceHandles.EmgData1Descriptor,
                        Final.subscribe_payload)
+
         self.write_att(connection,
                        ServiceHandles.EmgData2Descriptor,
                        Final.subscribe_payload)
+
         self.write_att(connection,
                        ServiceHandles.EmgData3Descriptor,
                        Final.subscribe_payload)
+
 
 
 ##############################################################################
