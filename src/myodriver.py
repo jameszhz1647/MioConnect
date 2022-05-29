@@ -239,7 +239,8 @@ class MyoDriver:
             Handler for ble_evt_connection_status event.
             """
             if payload['address'] == myo.address and payload['flags'] == 5:
-                self._print_status("Connection status: ", payload)
+                print('!!!!!!!!!!!!!!')
+                print("Connection status: ", payload)
                 myo.set_connected(True)
                 myo.set_id(payload['connection'])
                 self._print_status("Connected with id", myo.connection_id)

@@ -8,11 +8,11 @@ from serial.tools.list_ports import comports
 
 def main(argv):
     config = Config()
-    port0 = comports()[3][0] #ACM0 -> left upper
+    # port0 = comports()[3][0] #ACM0 -> left upper
     port1 = comports()[2][0] #ACM1 -> ;eft lower
     port2 = comports()[1][0] #ACM2 -> right upper
     port3 = comports()[0][0] #ACM3 -> right lower
-    print('port0: ', port0)
+    # print('port0: ', port0)
     print('port1: ', port1)
     print('port2: ', port2)
     print('port3: ', port3)
@@ -47,14 +47,14 @@ def main(argv):
     myo_driver = None
     try:
         # Init
-        myo_driver_0 = MyoDriver(config, port0, left_upper)
+        # myo_driver_0 = MyoDriver(config, port0, left_upper)
         myo_driver_1 = MyoDriver(config, port1, left_lower)
         myo_driver_2 = MyoDriver(config, port2, right_upper)
         myo_driver_3 = MyoDriver(config, port3, right_lower)
 
         # Connect
-        myo_driver_0.run()
-        myo_driver_0.get_info()
+        # myo_driver_0.run()
+        # myo_driver_0.get_info()
         print('run second!!!')
         myo_driver_1.run()
         myo_driver_1.get_info()
@@ -68,7 +68,7 @@ def main(argv):
         if turnoff:
             # Turn off
             print("turn off")
-            myo_driver_0.deep_sleep_all()
+            # myo_driver_0.deep_sleep_all()
             myo_driver_1.deep_sleep_all()
             myo_driver_2.deep_sleep_all()
             myo_driver_3.deep_sleep_all()
@@ -84,7 +84,7 @@ def main(argv):
 
         # Receive and handle data
         while True:
-            myo_driver_0.receive()
+            # myo_driver_0.receive()
             myo_driver_1.receive()
             myo_driver_2.receive()
             myo_driver_3.receive()
@@ -97,12 +97,12 @@ def main(argv):
 
     finally:
         print("Disconnecting...")
-        if myo_driver_0 is not None:
-            if Config.DEEP_SLEEP_AT_KEYBOARD_INTERRUPT:
-                myo_driver_0.deep_sleep_all()
-            else:
-                myo_driver_0.disconnect_all()
-        print("left_upper Disconnected")
+        # if myo_driver_0 is not None:
+        #     if Config.DEEP_SLEEP_AT_KEYBOARD_INTERRUPT:
+        #         myo_driver_0.deep_sleep_all()
+        #     else:
+        #         myo_driver_0.disconnect_all()
+        # print("left_upper Disconnected")
         
         if myo_driver_1 is not None:
             if Config.DEEP_SLEEP_AT_KEYBOARD_INTERRUPT:
