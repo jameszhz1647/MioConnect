@@ -162,6 +162,31 @@ class MyoDriver:
                             self._print_status("Myo found", self.myo_to_connect.address)
                             self._print_status()
                             self.scanning = False
+        
+        if self.port == "/dev/ttyACM2":
+            if self.scanning and not self.myo_to_connect:
+                self._print_status("Device found for ACM2", payload['sender'])
+                if payload['data'].endswith(bytes(Final.myo_id)):
+                    if self.armband == payload['sender']:
+                        if not self._has_paired_with(payload['sender']):
+                            print("connect myo armband 2")
+                            self.myo_to_connect = Myo(payload['sender'])
+                            self._print_status("Myo found", self.myo_to_connect.address)
+                            self._print_status()
+                            self.scanning = False   
+        
+        if self.port == "/dev/ttyACM3":
+            if self.scanning and not self.myo_to_connect:
+                self._print_status("Device found for ACM3", payload['sender'])
+                if payload['data'].endswith(bytes(Final.myo_id)):
+                    if self.armband == payload['sender']:
+                        if not self._has_paired_with(payload['sender']):
+                            print("connect myo armband 3")
+                            self.myo_to_connect = Myo(payload['sender'])
+                            self._print_status("Myo found", self.myo_to_connect.address)
+                            self._print_status()
+                            self.scanning = False                 
+        
 
     def _has_paired_with(self, address):
         """
