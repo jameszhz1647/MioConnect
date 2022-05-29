@@ -9,7 +9,7 @@ from serial.tools.list_ports import comports
 def main(argv):
     config = Config()
     # port0 = comports()[3][0] #ACM0 -> left upper
-    port1 = comports()[2][0] #ACM1 -> ;eft lower
+    port1 = comports()[2][0] #ACM1 -> left lower
     port2 = comports()[1][0] #ACM2 -> right upper
     port3 = comports()[0][0] #ACM3 -> right lower
     # print('port0: ', port0)
